@@ -24,9 +24,24 @@ var Page = db.define('page', {
 }, {
   getterMethods: {
     route: function()  { return '/wiki/' + this.urlTitle; }
+  },
+  hooks: {
+  	beforeValidate: function(page, options) {
+  		page.urlTitle = generateUrlTitle(page.title);
+  	}
   }
 });
 
+function generateUrlTitle (title) {
+  if (title) {
+    // Removes all non-alphanumeric characters from title
+    // And make whitespace underscore
+    return title.replace(/\s+/g, '_').replace(/\W/g, '');
+  } else {
+    // Generates random 5 letter string
+    return Math.random().toString(36).substring(2, 7);
+  }
+}
 
 var User = db.define('user', {
 	name: {

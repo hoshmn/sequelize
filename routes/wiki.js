@@ -8,26 +8,35 @@ var Page = models.Page;
 var Users = models.Users;
 
 
-router.get('/', function(req, res, next){
-	res.redirect('/');
+router.get('/:pageName', function(req, res, next){
+	var urlName = req.params.pageName;
+	console.log(urlName);
+	//res.redirect('/');
+	Page.findOne({where: {urlTitle: urlName}})
+	.then(function(result){
+		res.json(result);
+	})
+	.catch(function(err){
+		console.error(err);
+	});
 });
 
 router.post('/', function(req, res, next){
 
 	var page = Page.build({
     title: req.body.pageTitle,
-    urlTitle: req.body.pageTitle,
     content: req.body.Content,
     status: req.body.status
   	});
 
   	page.save()
-	.then(function(){
-		res.redirect('/');
+	.then(function(result){
+		res.json(result);
 	});
 
 
 });
+
 
 router.get('/add', function(req, res, next){
 
